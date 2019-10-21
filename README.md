@@ -21,7 +21,7 @@ PMA_ABSOLUTE_URI=http://YOUR_HOSTNAME/phpMyAdmin/
 GRAYLOG_URL=http://YOUR_HOSTNAME/graylog/
 ```
 
-## URL to access phpMyAdmin and phpRedisAdmin
+## URLs
 ```
 http://YOUR_HOSTNAME/phpMyAdmin
 http://YOUR_HOSTNAME/phpRedisAdmin

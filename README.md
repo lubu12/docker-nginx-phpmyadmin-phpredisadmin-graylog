@@ -9,6 +9,17 @@ phpMyAdmin + phpRedisAdmin via Nginx: https://github.com/lubu12/docker-nginx-php
 
 Graylog via Nginx: https://github.com/lubu12/docker-graylog
 
+## Sample .env
+```
+NGINX_VERSION=mainline-alpine
+NGINX_PORT=80
+DOCKER_NGINX_PORT=8080
+PHP_FPM_VERSION=7.3-fpm-alpine
+HTML_VOLUME=/var/www/html
+PMA_HOSTS=YOUR_DB_HOSTNAME(S)
+PMA_ABSOLUTE_URI=http://YOUR_HOSTNAME/phpMyAdmin/
+GRAYLOG_URL=http://YOUR_HOSTNAME/graylog/
+```
 
 ## URL to access phpMyAdmin and phpRedisAdmin
 ```

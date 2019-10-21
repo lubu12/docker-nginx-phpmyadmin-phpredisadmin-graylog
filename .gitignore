@@ -1,3 +1,4 @@
 # ignore .env file
 .env
 phpredisadmin/config.inc.php
+graylog/config/*

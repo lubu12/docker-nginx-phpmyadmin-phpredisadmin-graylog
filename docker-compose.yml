@@ -1,7 +1,4 @@
-# For setting up admin host - phpMyAdmin and phpRedisAdmin
-# Use networks and depends_on instead of link which is deprecated
-
-version: '3'
+version: '2'
 services:
   nginx:
     build:
@@ -10,16 +7,78 @@ services:
       args:
         version: ${NGINX_VERSION}
         html_volume: ${HTML_VOLUME}
+        graylog_url: ${GRAYLOG_URL}
     ports:
      - "${NGINX_PORT}:${DOCKER_NGINX_PORT}"
     volumes:
      - ${HTML_VOLUME}:${HTML_VOLUME}
     depends_on:
+     - graylog
      - phpmyadmin
      - phpredisadmin
     networks:
      - backend_phpmyadmin
      - backend_phpredisadmin
+     - backend_graylog
+
+  # MongoDB: https://hub.docker.com/_/mongo/
+  mongodb:
+    image: mongo:3
+    volumes:
+      - mongo_data:/data/db
+    networks:
+     - backend_graylog
+
+  # Elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/6.x/docker.html
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.2
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    networks:
+     - backend_graylog
+
+  # Graylog: https://hub.docker.com/r/graylog/graylog/
+  graylog:
+    image: graylog/graylog:3.1
+    volumes:
+      - graylog_journal:/usr/share/graylog/data/journal
+      - ./graylog/config:/usr/share/graylog/data/config
+# Environment variables for Graylog configuration file are no longer needed when using custom configuration files      
+#    environment:
+      # CHANGE ME (must be at least 16 characters)!
+#      - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
+      # Password: admin
+#      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+#      - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
+    links:
+      - mongodb:mongo
+      - elasticsearch
+    depends_on:
+      - mongodb
+      - elasticsearch
+    ports:
+      # Graylog web interface and REST API
+      - 9000:9000
+      # Syslog TCP
+      - 1514:1514
+      # Syslog UDP
+      - 1514:1514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
+    networks:
+     - backend_graylog
 
   phpmyadmin:
     build:
@@ -53,7 +112,19 @@ services:
     networks:
      - backend_phpredisadmin
 
+
+# Volumes for persisting data, see https://docs.docker.com/engine/admin/volumes/volumes/
+volumes:
+  mongo_data:
+    driver: local
+  es_data:
+    driver: local
+  graylog_journal:
+    driver: local
+
 networks:
+  backend_graylog:
+    driver: bridge
   backend_phpmyadmin:
     driver: bridge
   backend_phpredisadmin:

@@ -6,6 +6,7 @@ Tested at AWS EC2 and RDS - Amazon Linux 2
 
 ## Reference
 phpMyAdmin + phpRedisAdmin via Nginx: https://github.com/lubu12/docker-nginx-phpMyAdmin-phpRedisAdmin
+
 Graylog via Nginx: https://github.com/lubu12/docker-graylog
 
 

@@ -4,9 +4,9 @@ Run phpMyAdmin, phpRedisAdmin and Graylog using Nginx as reverse proxy via docke
 
 Tested at AWS EC2 and RDS - Amazon Linux 2
 
-Reference on setting up the phpMyAdmin + phpRedisAdmin via Nginx: https://github.com/lubu12/docker-nginx-phpMyAdmin-phpRedisAdmin
-
-Reference on setting up Graylog via Nginx: https://github.com/lubu12/docker-graylog
+## Reference
+phpMyAdmin + phpRedisAdmin via Nginx: https://github.com/lubu12/docker-nginx-phpMyAdmin-phpRedisAdmin
+Graylog via Nginx: https://github.com/lubu12/docker-graylog
 
 
 ## URL to access phpMyAdmin and phpRedisAdmin
